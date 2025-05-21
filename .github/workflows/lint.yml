@@ -38,7 +38,9 @@ jobs:
       - name: Add required deps
         run: uv add pylint-exit anybadge
       - name: Lint project
-        run: uv run pylint --output-format=text ${{ inputs.MODULE_NAME}} | tee ./${{ inputs.PYLINT_OUTPUT}}/pylint.log || uv run pylint-exit $?
+        run: |
+          mkdir -p ${{ inputs.PYLINT_OUTPUT}}
+          uv run pylint --output-format=text ${{ inputs.MODULE_NAME}} | tee ./${{ inputs.PYLINT_OUTPUT}}/pylint.log || uv run pylint-exit $?
       - name: Eval Lint
         run: |
           PYLINT_SCORE=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' ./${{ inputs.PYLINT_OUTPUT}}/pylint.log)
